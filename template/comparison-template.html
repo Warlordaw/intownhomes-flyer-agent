@@ -349,20 +349,6 @@
         }
         .agent-info .agent-name { font-weight: 700; color: var(--blue); }
 
-        /* ── Page breaks for clean PDF output ─────────── */
-        .cards-section { page-break-before: always; }
-        .comparison-section { page-break-before: always; }
-        .roi-section { page-break-before: always; }
-        .payment-section { page-break-before: always; }
-        .explainers-section { page-break-before: always; }
-        .cta-footer { page-break-before: auto; }
-
-        /* Prevent elements from being split across pages */
-        .home-card, .stat-card, .roi-card, .payment-card,
-        .explainer-card, .table-row, .bottom-banner {
-            page-break-inside: avoid;
-        }
-
         /* ── Print / PDF adjustments ─────────────────── */
         @media print {
             body { -webkit-print-color-adjust: exact; print-color-adjust: exact; }

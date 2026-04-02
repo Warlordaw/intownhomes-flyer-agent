@@ -1,0 +1,147 @@
+openapi: 3.0.3
+info:
+  title: InTownHomes Flyer Generator API
+  description: Generates branded comparison flyer PDFs and emails them to buyers
+  version: 1.0.0
+
+servers:
+  - url: ${{API_BASE_URL}}
+    description: PDF generation server
+
+paths:
+  /generate:
+    post:
+      operationId: generateFlyer
+      summary: Generate a comparison flyer PDF and email it to the buyer
+      description: Takes InTownHomes and competitor listing details, generates a branded PDF comparison flyer, and emails it to the specified buyer.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - buyerName
+                - buyerEmail
+                - ithAddress
+                - ithPriceNum
+                - compAddress
+                - compPriceNum
+                - agentName
+                - agentPhone
+                - agentEmail
+              properties:
+                buyerName:
+                  type: string
+                  description: Full name of the buyer receiving the flyer
+                buyerEmail:
+                  type: string
+                  description: Email address to send the flyer PDF to
+                ithPlan:
+                  type: string
+                  description: InTownHomes plan name (e.g. The Oakmont). Optional — defaults to "InTownHomes Plan"
+                  default: InTownHomes Plan
+                ithAddress:
+                  type: string
+                  description: InTownHomes property street address including city, state, zip
+                ithPriceNum:
+                  type: number
+                  description: InTownHomes listing price as a number (e.g. 589000)
+                ithBeds:
+                  type: string
+                  description: Number of bedrooms in InTownHomes listing
+                ithBaths:
+                  type: string
+                  description: Number of bathrooms in InTownHomes listing (e.g. 3.5)
+                ithSqft:
+                  type: string
+                  description: Square footage of InTownHomes listing
+                ithGarage:
+                  type: string
+                  description: Number of garage spaces in InTownHomes listing
+                compBuilder:
+                  type: string
+                  description: Competitor builder name (e.g. Meritage Homes). Optional — defaults to "Competitor"
+                  default: Competitor
+                compAddress:
+                  type: string
+                  description: Competitor property street address including city, state, zip
+                compPriceNum:
+                  type: number
+                  description: Competitor listing price as a number (e.g. 464000)
+                compBeds:
+                  type: string
+                  description: Number of bedrooms in competitor listing
+                compBaths:
+                  type: string
+                  description: Number of bathrooms in competitor listing
+                compSqft:
+                  type: string
+                  description: Square footage of competitor listing
+                compGarage:
+                  type: string
+                  description: Number of garage spaces in competitor listing
+                agentName:
+                  type: string
+                  description: Sales agent full name
+                agentPhone:
+                  type: string
+                  description: Sales agent phone number
+                agentEmail:
+                  type: string
+                  description: Sales agent email address
+      responses:
+        '200':
+          description: Flyer generated and emailed successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    description: Success message
+                  filename:
+                    type: string
+                    description: Generated PDF filename
+                  buyerName:
+                    type: string
+                  buyerEmail:
+                    type: string
+                  ithSummary:
+                    type: string
+                    description: Short summary of InTownHomes listing
+                  compSummary:
+                    type: string
+                    description: Short summary of competitor listing
+        '400':
+          description: Missing required fields
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                  message:
+                    type: string
+                  errors:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        field:
+                          type: string
+                        message:
+                          type: string
+                        severity:
+                          type: string
+        '500':
+          description: Server error during generation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string

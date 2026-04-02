@@ -1,0 +1,15 @@
+{
+  "name": "intownhomes-flyer-generator",
+  "version": "2.0.0",
+  "description": "Generates InTownHomes comparison flyer PDFs from listing data",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "test": "node -e \"const{normalizeInput}=require('./lib/normalize');const{validateFlyerInput}=require('./lib/validate');const{assembleFlyerData}=require('./lib/assemble');const{generatePdf}=require('./lib/render');const fs=require('fs');const path=require('path');async function t(){const d=normalizeInput({buyerName:'Test Buyer',buyerEmail:'test@test.com',ithPlan:'The Oakmont',ithAddress:'123 Main St Houston TX',ithPriceNum:589000,ithBeds:'4',ithBaths:'3.5',ithSqft:'3245',ithGarage:'3',compBuilder:'Meritage',compAddress:'456 Oak Ave Houston TX',compPriceNum:464000,compBeds:'4',compBaths:'3',compSqft:'2890',compGarage:'2',agentName:'Test Agent',agentPhone:'7135551234',agentEmail:'agent@test.com'});const v=validateFlyerInput(d);if(!v.isReady){console.error('Validation failed:',v.errors);process.exit(1);}const{templateVars}=assembleFlyerData(d);const o=path.join(__dirname,'..','output','test.pdf');fs.mkdirSync(path.dirname(o),{recursive:true});await generatePdf(templateVars,o);console.log('OK:',fs.statSync(o).size,'bytes →',o);}t();\"",
+    "server": "node server.js"
+  },
+  "dependencies": {
+    "puppeteer": "^22.0.0",
+    "express": "^4.18.0"
+  }
+}

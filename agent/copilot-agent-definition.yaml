@@ -1,0 +1,173 @@
+# ─────────────────────────────────────────────────────────────────
+# InTownHomes Comparison Flyer — Copilot Studio Agent Definition
+# ─────────────────────────────────────────────────────────────────
+# Import this into Copilot Studio (copilotstudio.microsoft.com)
+# as a reference for building the agent topics and conversation flow.
+#
+# This is a DESIGN DOCUMENT — Copilot Studio uses a visual editor,
+# so you'll recreate these topics in the UI using this as a guide.
+# ─────────────────────────────────────────────────────────────────
+
+agent:
+  name: "InTownHomes Comparison Flyer Generator"
+  description: "Create branded comparison flyers for InTownHomes vs competitor listings and email them to buyers."
+  icon: "🏠"
+  instructions: |
+    You are a sales assistant for InTownHomes, a premium home builder in Houston, TX.
+    Your job is to help salespeople create comparison flyer PDFs that show an InTownHomes
+    listing side-by-side with a competitor listing, highlighting InTownHomes' premium
+    features (rainscreen siding, 2x6 walls, Navien tankless water heater, spray foam
+    insulation, KitchenAid appliances, quartz countertops, luxury vinyl plank flooring).
+
+    When a user wants to create a flyer, collect the required information step by step,
+    then trigger the PDF generation flow and email it to the buyer.
+
+# ─────────────────────────────────────────────────────────────────
+# Topic 1: Greeting / Trigger
+# ─────────────────────────────────────────────────────────────────
+topics:
+  - name: "Create Comparison Flyer"
+    trigger_phrases:
+      - "create a flyer"
+      - "create a comparison"
+      - "compare a listing"
+      - "make a comparison flyer"
+      - "generate a flyer"
+      - "new flyer"
+      - "compare homes"
+
+    steps:
+      # ── Step 1: Buyer info ─────────────────────────
+      - message: "Let's create a comparison flyer! First, who is this for?"
+
+      - ask: "What is the buyer's name?"
+        variable: buyerName
+        type: string
+
+      - ask: "What is the buyer's email address?"
+        variable: buyerEmail
+        type: string
+
+      # ── Step 2: InTownHomes listing ────────────────
+      - message: "Great! Now let's enter the **InTownHomes listing** details."
+
+      - ask: "What is the plan name? (e.g., The Oakmont)"
+        variable: ithPlan
+        type: string
+
+      - ask: "What is the address?"
+        variable: ithAddress
+        type: string
+
+      - ask: "What is the price? (just the number, e.g., 589000)"
+        variable: ithPriceNum
+        type: number
+
+      - ask: "How many bedrooms?"
+        variable: ithBeds
+        type: string
+
+      - ask: "How many bathrooms?"
+        variable: ithBaths
+        type: string
+
+      - ask: "What is the square footage?"
+        variable: ithSqft
+        type: string
+
+      - ask: "How many garage spaces?"
+        variable: ithGarage
+        type: string
+
+      # ── Step 3: Competitor listing ─────────────────
+      - message: "Now let's enter the **competitor listing** details."
+
+      - ask: "What is the competitor builder's name? (e.g., Meritage Homes)"
+        variable: compBuilder
+        type: string
+
+      - ask: "What is the competitor's address?"
+        variable: compAddress
+        type: string
+
+      - ask: "What is the competitor's price? (just the number)"
+        variable: compPriceNum
+        type: number
+
+      - ask: "Bedrooms?"
+        variable: compBeds
+        type: string
+
+      - ask: "Bathrooms?"
+        variable: compBaths
+        type: string
+
+      - ask: "Square footage?"
+        variable: compSqft
+        type: string
+
+      - ask: "Garage spaces?"
+        variable: compGarage
+        type: string
+
+      # ── Step 4: Agent info ─────────────────────────
+      - message: "Almost done! Your info for the flyer:"
+
+      - ask: "Your name (sales agent)?"
+        variable: agentName
+        type: string
+
+      - ask: "Your phone number?"
+        variable: agentPhone
+        type: string
+
+      - ask: "Your email?"
+        variable: agentEmail
+        type: string
+
+      # ── Step 5: Confirm & Generate ─────────────────
+      - message: |
+          Here's what I have:
+
+          **InTownHomes:** {{ithPlan}} at {{ithAddress}} — ${{ithPriceNum}}
+          {{ithBeds}} bed / {{ithBaths}} bath / {{ithSqft}} sqft / {{ithGarage}} garage
+
+          **Competitor:** {{compBuilder}} at {{compAddress}} — ${{compPriceNum}}
+          {{compBeds}} bed / {{compBaths}} bath / {{compSqft}} sqft / {{compGarage}} garage
+
+          **Sending to:** {{buyerName}} ({{buyerEmail}})
+
+      - ask: "Does this look correct? (Yes/No)"
+        variable: confirmed
+        type: string
+
+      - condition:
+          if: "confirmed == 'Yes' or confirmed == 'yes'"
+          then:
+            # Trigger the Power Automate flow
+            - action: "Call Power Automate flow: Generate and Email Flyer"
+              inputs:
+                buyerName: "{{buyerName}}"
+                buyerEmail: "{{buyerEmail}}"
+                ithPlan: "{{ithPlan}}"
+                ithAddress: "{{ithAddress}}"
+                ithPriceNum: "{{ithPriceNum}}"
+                ithBeds: "{{ithBeds}}"
+                ithBaths: "{{ithBaths}}"
+                ithSqft: "{{ithSqft}}"
+                ithGarage: "{{ithGarage}}"
+                compBuilder: "{{compBuilder}}"
+                compAddress: "{{compAddress}}"
+                compPriceNum: "{{compPriceNum}}"
+                compBeds: "{{compBeds}}"
+                compBaths: "{{compBaths}}"
+                compSqft: "{{compSqft}}"
+                compGarage: "{{compGarage}}"
+                agentName: "{{agentName}}"
+                agentPhone: "{{agentPhone}}"
+                agentEmail: "{{agentEmail}}"
+
+            - message: "✅ Done! The comparison flyer has been generated and sent to **{{buyerName}}** at {{buyerEmail}}."
+
+          else:
+            - message: "No problem — let me know what to change, or say 'start over' to begin again."

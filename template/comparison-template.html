@@ -1,0 +1,762 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home Comparison — {{buyerName}}</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800&family=Raleway:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: 'Montserrat', sans-serif; background: #fff; color: #1A1A1A; }
+        h1, h2, h3, h4 { font-family: 'Raleway', sans-serif; }
+
+        :root {
+            --blue: #003B5C;
+            --teal: #00A3AD;
+            --orange: #FF6B35;
+            --gray: #F5F5F5;
+            --dark: #1A1A1A;
+        }
+
+        /* ── Header ──────────────────────────────────── */
+        .header {
+            background: var(--blue);
+            padding: 20px 48px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .header img { height: 48px; }
+        .header-right { display: flex; align-items: center; gap: 24px; color: #fff; font-weight: 600; }
+
+        /* ── Hero ─────────────────────────────────────── */
+        .hero {
+            background: linear-gradient(135deg, var(--blue), var(--teal), #1a3a5c);
+            padding: 64px 48px;
+            color: #fff;
+            position: relative;
+            overflow: hidden;
+        }
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: -60px; right: -60px;
+            width: 300px; height: 300px;
+            background: var(--orange);
+            border-radius: 50%;
+            opacity: 0.08;
+        }
+        .hero-badge { color: var(--teal); font-size: 13px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 4px; }
+        .hero h1 { font-size: 20px; font-weight: 700; margin-bottom: 8px; }
+        .hero h2 { font-size: 40px; font-weight: 900; line-height: 1.1; margin-bottom: 12px; }
+        .hero p { font-size: 16px; color: #cee; max-width: 700px; line-height: 1.5; }
+
+        /* ── Quick Stats Bar ─────────────────────────── */
+        .stats-bar {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 16px;
+            padding: 32px 48px;
+            border-bottom: 4px solid var(--teal);
+        }
+        .stat-card {
+            background: linear-gradient(135deg, var(--gray), #fff);
+            border: 2px solid var(--blue);
+            border-radius: 12px;
+            padding: 20px;
+            text-align: center;
+        }
+        .stat-card i { font-size: 28px; margin-bottom: 8px; }
+        .stat-card .stat-value { font-size: 24px; font-weight: 800; color: var(--blue); }
+        .stat-card .stat-label { font-size: 12px; font-weight: 600; color: #666; }
+
+        /* ── Side-by-Side Cards ──────────────────────── */
+        .cards-section { padding: 48px; background: linear-gradient(180deg, #fff, var(--gray)); }
+        .cards-section-title { text-align: center; margin-bottom: 32px; }
+        .cards-section-title h2 { font-size: 32px; font-weight: 900; color: var(--blue); }
+        .cards-section-title p { font-size: 16px; color: #666; }
+
+        .cards-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 32px; }
+
+        .home-card {
+            background: #fff;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+        }
+        .home-card.premium { border: 4px solid var(--teal); }
+        .home-card.competitor { border: 4px solid #ccc; }
+
+        .card-image {
+            height: 240px;
+            background: linear-gradient(135deg, var(--blue), var(--teal));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            font-size: 18px;
+            font-weight: 600;
+            position: relative;
+        }
+        .card-image img { width: 100%; height: 100%; object-fit: cover; }
+        .card-badge {
+            position: absolute;
+            top: 12px; left: 12px;
+            padding: 8px 16px;
+            border-radius: 24px;
+            font-weight: 700;
+            font-size: 13px;
+            color: #fff;
+        }
+        .card-badge.premium-badge { background: var(--teal); }
+        .card-badge.competitor-badge { background: #666; }
+
+        .card-body { padding: 24px; }
+        .card-price { font-size: 28px; font-weight: 900; color: var(--blue); }
+        .card-plan { font-size: 16px; font-weight: 600; color: #666; margin-top: 4px; }
+        .card-address { font-size: 14px; color: #888; margin-top: 2px; }
+        .card-payment { text-align: right; }
+        .card-payment .amount { font-size: 20px; font-weight: 800; color: var(--orange); }
+        .card-payment .label { font-size: 11px; color: #999; }
+
+        .card-header-row { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 16px; }
+
+        .specs-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 8px;
+            background: var(--gray);
+            padding: 16px;
+            border-radius: 12px;
+            margin-bottom: 16px;
+        }
+        .spec { text-align: center; }
+        .spec i { font-size: 20px; margin-bottom: 4px; }
+        .spec .spec-value { font-size: 20px; font-weight: 800; color: var(--blue); }
+        .spec .spec-label { font-size: 11px; color: #666; }
+        .spec i.teal { color: var(--teal); }
+        .spec i.gray { color: #999; }
+
+        .feature-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 10px 12px;
+            border-radius: 8px;
+            margin-bottom: 6px;
+            font-size: 13px;
+            font-weight: 600;
+        }
+        .feature-row.good { background: #f0fdf4; border-left: 4px solid #22c55e; }
+        .feature-row.bad { background: #fef2f2; border-left: 4px solid #ef4444; }
+        .feature-row i.green { color: #22c55e; }
+        .feature-row i.red { color: #ef4444; }
+
+        /* ── Comparison Table ────────────────────────── */
+        .comparison-section { padding: 48px; }
+        .comparison-section > .section-title { text-align: center; margin-bottom: 32px; }
+        .comparison-section > .section-title h2 { font-size: 32px; font-weight: 900; color: var(--blue); }
+        .comparison-section > .section-title p { font-size: 16px; color: #666; }
+
+        .comparison-table {
+            width: 100%;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+            border: 4px solid var(--teal);
+        }
+        .comparison-table .table-header {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr;
+            background: var(--blue);
+            color: #fff;
+        }
+        .comparison-table .table-header div { padding: 16px 24px; font-size: 18px; font-weight: 700; }
+        .comparison-table .table-header div:not(:last-child) { border-right: 1px solid var(--teal); }
+
+        .table-row {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr;
+            border-bottom: 1px solid #e5e7eb;
+        }
+        .table-row:hover { background: #eff6ff; }
+        .table-row div { padding: 16px 24px; display: flex; align-items: center; }
+        .table-row div:not(:last-child) { border-right: 1px solid #e5e7eb; }
+        .table-row .feature-name { font-weight: 700; color: var(--blue); font-size: 15px; }
+        .table-row .feature-desc { font-size: 12px; color: #666; }
+        .table-row .cell-center { justify-content: center; text-align: center; flex-direction: column; }
+        .table-row .cell-center i { font-size: 36px; margin-bottom: 4px; }
+        .table-row .cell-center .cell-label { font-weight: 700; font-size: 13px; }
+        .table-row .cell-center .cell-sub { font-size: 11px; color: #999; }
+        .cell-label.green { color: #15803d; }
+        .cell-label.red { color: #b91c1c; }
+        .cell-label.yellow { color: #a16207; }
+        .big-value { font-size: 28px; font-weight: 900; }
+        .big-value.teal { color: var(--teal); }
+        .big-value.gray { color: #999; }
+
+        /* ── ROI Section ──────────────────────────────── */
+        .roi-section {
+            background: linear-gradient(135deg, var(--blue), var(--teal));
+            padding: 48px;
+            color: #fff;
+        }
+        .roi-section .section-title { text-align: center; margin-bottom: 32px; }
+        .roi-section .section-title h2 { font-size: 32px; font-weight: 900; }
+        .roi-section .section-title p { font-size: 16px; color: #cee; }
+        .roi-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 32px; }
+        .roi-card { background: #fff; border-radius: 16px; padding: 32px; color: var(--dark); }
+        .roi-card h3 { font-size: 20px; font-weight: 700; color: var(--blue); margin-bottom: 16px; }
+        .roi-stat { padding: 16px; border-radius: 8px; margin-bottom: 8px; }
+        .roi-stat.good { background: #f0fdf4; border-left: 4px solid #22c55e; }
+        .roi-stat.bad { background: #fef2f2; border-left: 4px solid #ef4444; }
+        .roi-stat .roi-label { font-size: 13px; color: #666; }
+        .roi-stat .roi-value { font-size: 28px; font-weight: 900; }
+        .roi-stat .roi-value.green { color: #16a34a; }
+        .roi-stat .roi-value.red { color: #dc2626; }
+        .roi-stat .roi-sub { font-size: 11px; color: #999; }
+
+        .savings-row { display: flex; justify-content: space-between; align-items: center; padding: 12px 16px; background: var(--gray); border-radius: 8px; margin-bottom: 6px; }
+        .savings-row .savings-label { font-weight: 600; color: #555; font-size: 14px; }
+        .savings-row .savings-value { font-size: 20px; font-weight: 900; color: #16a34a; }
+
+        /* ── Payment Comparison ───────────────────────── */
+        .payment-section { padding: 48px; }
+        .payment-section .section-title { text-align: center; margin-bottom: 32px; }
+        .payment-section .section-title h2 { font-size: 32px; font-weight: 900; color: var(--blue); }
+        .payment-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 32px; }
+        .payment-card {
+            background: linear-gradient(135deg, var(--gray), #fff);
+            border-radius: 16px;
+            padding: 32px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+        }
+        .payment-card.premium { border: 4px solid var(--teal); }
+        .payment-card.competitor { border: 4px solid #ccc; }
+        .payment-card h3 { font-size: 20px; font-weight: 700; color: var(--blue); margin-bottom: 16px; }
+        .payment-card .price-tag { padding: 8px 16px; border-radius: 24px; font-weight: 700; color: #fff; font-size: 14px; }
+        .payment-card .price-tag.teal { background: var(--teal); }
+        .payment-card .price-tag.gray { background: #666; }
+        .payment-card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; }
+
+        .payment-result {
+            padding: 24px;
+            border-radius: 12px;
+            text-align: center;
+            color: #fff;
+            margin-top: 16px;
+        }
+        .payment-result.blue { background: var(--blue); }
+        .payment-result.dark { background: #374151; }
+        .payment-result .payment-amount { font-size: 40px; font-weight: 900; }
+        .payment-result .payment-label { font-size: 13px; color: #ccc; margin-bottom: 8px; }
+        .payment-breakdown { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-top: 12px; font-size: 12px; }
+        .payment-breakdown .bd-label { color: #aaa; }
+        .payment-breakdown .bd-value { font-weight: 700; }
+
+        .payment-note { padding: 12px 16px; border-radius: 8px; font-size: 13px; font-weight: 600; margin-top: 12px; }
+        .payment-note.good { background: #f0fdf4; border-left: 4px solid #22c55e; color: #555; }
+        .payment-note.bad { background: #fef2f2; border-left: 4px solid #ef4444; color: #555; }
+        .payment-note .highlight-green { font-weight: 900; color: #16a34a; }
+        .payment-note .highlight-red { font-weight: 900; color: #dc2626; }
+
+        /* ── Bottom Comparison Banner ─────────────────── */
+        .bottom-banner {
+            background: linear-gradient(90deg, var(--teal), var(--blue));
+            padding: 32px 48px;
+            color: #fff;
+        }
+        .bottom-banner .banner-title { text-align: center; font-size: 24px; font-weight: 700; margin-bottom: 16px; }
+        .banner-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; text-align: center; }
+        .banner-stat .banner-label { font-size: 13px; color: #cee; }
+        .banner-stat .banner-value { font-size: 32px; font-weight: 900; }
+        .banner-stat .banner-value.orange { color: var(--orange); }
+        .banner-stat .banner-value.green { color: #4ade80; }
+        .banner-stat .banner-sub { font-size: 11px; color: #cee; }
+
+        /* ── Feature Explainers ───────────────────────── */
+        .explainers-section { padding: 48px; background: linear-gradient(180deg, #fff, var(--gray)); }
+        .explainers-section .section-title { text-align: center; margin-bottom: 32px; }
+        .explainers-section .section-title h2 { font-size: 32px; font-weight: 900; color: var(--blue); }
+        .explainers-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+        .explainer-card {
+            background: #fff;
+            border-radius: 16px;
+            overflow: hidden;
+            border: 4px solid var(--teal);
+            box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+        }
+        .explainer-card .explainer-img {
+            height: 180px;
+            background: linear-gradient(135deg, var(--blue), var(--teal));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            font-size: 48px;
+        }
+        .explainer-card .explainer-body { padding: 20px; }
+        .explainer-card h3 { font-size: 18px; font-weight: 700; color: var(--blue); margin-bottom: 8px; }
+        .explainer-card p { font-size: 13px; color: #555; line-height: 1.5; margin-bottom: 12px; }
+        .explainer-point { display: flex; align-items: flex-start; gap: 8px; margin-bottom: 8px; }
+        .explainer-point i { color: #22c55e; margin-top: 2px; }
+        .explainer-point .point-title { font-weight: 700; color: var(--blue); font-size: 13px; }
+        .explainer-point .point-desc { font-size: 12px; color: #666; }
+
+        /* ── CTA Footer ──────────────────────────────── */
+        .cta-footer {
+            background: var(--blue);
+            padding: 48px;
+            text-align: center;
+            color: #fff;
+        }
+        .cta-footer h2 { font-size: 32px; font-weight: 900; margin-bottom: 8px; }
+        .cta-footer p { font-size: 16px; color: #cee; margin-bottom: 24px; }
+        .cta-buttons { display: flex; justify-content: center; gap: 16px; }
+        .cta-btn {
+            padding: 16px 32px;
+            border-radius: 12px;
+            font-weight: 700;
+            font-size: 16px;
+            text-decoration: none;
+            display: inline-block;
+        }
+        .cta-btn.orange { background: var(--orange); color: #fff; }
+        .cta-btn.white { background: #fff; color: var(--blue); }
+
+        .agent-info {
+            padding: 16px 48px;
+            background: var(--gray);
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            font-size: 13px;
+            color: #555;
+        }
+        .agent-info .agent-avatar {
+            width: 48px; height: 48px;
+            background: var(--teal);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            font-weight: 700;
+            font-size: 18px;
+        }
+        .agent-info .agent-name { font-weight: 700; color: var(--blue); }
+
+        /* ── Page breaks for clean PDF output ─────────── */
+        .cards-section { page-break-before: always; }
+        .comparison-section { page-break-before: always; }
+        .roi-section { page-break-before: always; }
+        .payment-section { page-break-before: always; }
+        .explainers-section { page-break-before: always; }
+        .cta-footer { page-break-before: auto; }
+
+        /* Prevent elements from being split across pages */
+        .home-card, .stat-card, .roi-card, .payment-card,
+        .explainer-card, .table-row, .bottom-banner {
+            page-break-inside: avoid;
+        }
+
+        /* ── Print / PDF adjustments ─────────────────── */
+        @media print {
+            body { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+            .hero, .roi-section, .bottom-banner, .cta-footer, .header { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+        }
+    </style>
+</head>
+<body>
+
+<!-- ── Header ──────────────────────────────────────── -->
+<div class="header">
+    <img src="https://storage.googleapis.com/uxpilot-auth.appspot.com/2bf9ff35f5-244c051edb1ca66fd322.png" alt="InTownHomes" />
+    <div class="header-right">
+        <span>{{agentName}} | {{agentPhone}}</span>
+    </div>
+</div>
+
+<!-- ── Hero ────────────────────────────────────────── -->
+<div class="hero">
+    <div class="hero-badge">PERSONALIZED FOR YOU</div>
+    <h1>Welcome, {{buyerName}}!</h1>
+    <h2>Your Custom Home Comparison</h2>
+    <p>We've prepared a detailed side-by-side analysis showing why InTownHomes delivers more value, better construction quality, and long-term savings compared to the competition.</p>
+</div>
+
+<!-- ── Quick Stats ─────────────────────────────────── -->
+<div class="stats-bar">
+    <div class="stat-card">
+        <i class="fa-solid fa-home" style="color: var(--teal)"></i>
+        <div class="stat-value">2</div>
+        <div class="stat-label">Homes Compared</div>
+    </div>
+    <div class="stat-card">
+        <i class="fa-solid fa-dollar-sign" style="color: var(--orange)"></i>
+        <div class="stat-value">{{priceDifference}}</div>
+        <div class="stat-label">Price Difference</div>
+    </div>
+    <div class="stat-card">
+        <i class="fa-solid fa-leaf" style="color: #16a34a"></i>
+        <div class="stat-value">$2,400</div>
+        <div class="stat-label">Annual Energy Savings</div>
+    </div>
+    <div class="stat-card">
+        <i class="fa-solid fa-chart-line" style="color: var(--teal)"></i>
+        <div class="stat-value">18%</div>
+        <div class="stat-label">10-Year ROI</div>
+    </div>
+    <div class="stat-card">
+        <i class="fa-solid fa-clock" style="color: var(--orange)"></i>
+        <div class="stat-value">45</div>
+        <div class="stat-label">Days to Move-in</div>
+    </div>
+</div>
+
+<!-- ── Side-by-Side Cards ──────────────────────────── -->
+<div class="cards-section">
+    <div class="cards-section-title">
+        <h2>Side-by-Side Home Comparison</h2>
+        <p>Compare every detail of these two homes</p>
+    </div>
+
+    <div class="cards-grid">
+        <!-- InTownHomes Card -->
+        <div class="home-card premium">
+            <div class="card-image">
+                <div class="card-badge premium-badge"><i class="fa-solid fa-star"></i> InTownHomes Premium</div>
+                {{#if ithPhoto}}<img src="{{ithPhoto}}" alt="InTownHomes property" />{{else}}<span>InTownHomes Property Photo</span>{{/if}}
+            </div>
+            <div class="card-body">
+                <div class="card-header-row">
+                    <div>
+                        <div class="card-price">{{ithPrice}}</div>
+                        <div class="card-plan">{{ithPlan}}</div>
+                        <div class="card-address">{{ithAddress}}</div>
+                    </div>
+                    <div class="card-payment">
+                        <div class="amount">{{ithMonthly}}/mo</div>
+                        <div class="label">Est. Payment</div>
+                    </div>
+                </div>
+
+                <div class="specs-grid">
+                    <div class="spec">
+                        <i class="fa-solid fa-bed teal"></i>
+                        <div class="spec-value">{{ithBeds}}</div>
+                        <div class="spec-label">Bedrooms</div>
+                    </div>
+                    <div class="spec">
+                        <i class="fa-solid fa-bath teal"></i>
+                        <div class="spec-value">{{ithBaths}}</div>
+                        <div class="spec-label">Bathrooms</div>
+                    </div>
+                    <div class="spec">
+                        <i class="fa-solid fa-ruler-combined teal"></i>
+                        <div class="spec-value">{{ithSqft}}</div>
+                        <div class="spec-label">Sq Ft</div>
+                    </div>
+                    <div class="spec">
+                        <i class="fa-solid fa-car teal"></i>
+                        <div class="spec-value">{{ithGarage}}</div>
+                        <div class="spec-label">Garage</div>
+                    </div>
+                </div>
+
+                <div class="feature-row good"><span><i class="fa-solid fa-check-circle green"></i> Rainscreen System</span></div>
+                <div class="feature-row good"><span><i class="fa-solid fa-check-circle green"></i> 2x6 Wall Construction</span></div>
+                <div class="feature-row good"><span><i class="fa-solid fa-check-circle green"></i> Navien Tankless Water Heater</span></div>
+                <div class="feature-row good"><span><i class="fa-solid fa-check-circle green"></i> Spray Foam Insulation</span></div>
+            </div>
+        </div>
+
+        <!-- Competitor Card -->
+        <div class="home-card competitor">
+            <div class="card-image" style="background: linear-gradient(135deg, #555, #888);">
+                <div class="card-badge competitor-badge"><i class="fa-solid fa-building"></i> Competitor Home</div>
+                {{#if compPhoto}}<img src="{{compPhoto}}" alt="Competitor property" />{{else}}<span>Competitor Property Photo</span>{{/if}}
+            </div>
+            <div class="card-body">
+                <div class="card-header-row">
+                    <div>
+                        <div class="card-price">{{compPrice}}</div>
+                        <div class="card-plan">{{compBuilder}} — Similar Plan</div>
+                        <div class="card-address">{{compAddress}}</div>
+                    </div>
+                    <div class="card-payment">
+                        <div class="amount">{{compMonthly}}/mo</div>
+                        <div class="label">Est. Payment</div>
+                    </div>
+                </div>
+
+                <div class="specs-grid">
+                    <div class="spec">
+                        <i class="fa-solid fa-bed gray"></i>
+                        <div class="spec-value">{{compBeds}}</div>
+                        <div class="spec-label">Bedrooms</div>
+                    </div>
+                    <div class="spec">
+                        <i class="fa-solid fa-bath gray"></i>
+                        <div class="spec-value">{{compBaths}}</div>
+                        <div class="spec-label">Bathrooms</div>
+                    </div>
+                    <div class="spec">
+                        <i class="fa-solid fa-ruler-combined gray"></i>
+                        <div class="spec-value">{{compSqft}}</div>
+                        <div class="spec-label">Sq Ft</div>
+                    </div>
+                    <div class="spec">
+                        <i class="fa-solid fa-car gray"></i>
+                        <div class="spec-value">{{compGarage}}</div>
+                        <div class="spec-label">Garage</div>
+                    </div>
+                </div>
+
+                <div class="feature-row bad"><span><i class="fa-solid fa-times-circle red"></i> Standard Siding (No Rainscreen)</span></div>
+                <div class="feature-row bad"><span><i class="fa-solid fa-times-circle red"></i> 2x4 Wall Construction</span></div>
+                <div class="feature-row bad"><span><i class="fa-solid fa-times-circle red"></i> Standard Tank Water Heater</span></div>
+                <div class="feature-row bad"><span><i class="fa-solid fa-times-circle red"></i> Fiberglass Batt Insulation</span></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ── Feature Comparison Table ────────────────────── -->
+<div class="comparison-section">
+    <div class="section-title">
+        <h2>Interactive Feature Comparison</h2>
+        <p>A detailed look at what you get with each home</p>
+    </div>
+
+    <div class="comparison-table">
+        <div class="table-header">
+            <div>Feature</div>
+            <div style="text-align:center;">InTownHomes</div>
+            <div style="text-align:center;">Competitor</div>
+        </div>
+
+        <div class="table-row">
+            <div><div><div class="feature-name">Rainscreen Siding System</div><div class="feature-desc">Advanced moisture management</div></div></div>
+            <div class="cell-center"><i class="fa-solid fa-check-circle" style="color:#22c55e"></i><span class="cell-label green">Included</span><span class="cell-sub">$15K value</span></div>
+            <div class="cell-center"><i class="fa-solid fa-times-circle" style="color:#ef4444"></i><span class="cell-label red">Not Available</span></div>
+        </div>
+        <div class="table-row">
+            <div><div><div class="feature-name">Wall Construction</div><div class="feature-desc">Structural strength & insulation</div></div></div>
+            <div class="cell-center"><div class="big-value teal">2x6</div><span class="cell-label green">Premium</span><span class="cell-sub">33% more insulation</span></div>
+            <div class="cell-center"><div class="big-value gray">2x4</div><span class="cell-label">Standard</span></div>
+        </div>
+        <div class="table-row">
+            <div><div><div class="feature-name">Water Heater</div><div class="feature-desc">Hot water system</div></div></div>
+            <div class="cell-center"><i class="fa-solid fa-check-circle" style="color:#22c55e"></i><span class="cell-label green">Navien Tankless</span><span class="cell-sub">Save $450/year</span></div>
+            <div class="cell-center"><i class="fa-solid fa-times-circle" style="color:#ef4444"></i><span class="cell-label red">Standard Tank</span><span class="cell-sub">Higher utility costs</span></div>
+        </div>
+        <div class="table-row">
+            <div><div><div class="feature-name">Insulation</div><div class="feature-desc">Air sealing & R-value</div></div></div>
+            <div class="cell-center"><i class="fa-solid fa-check-circle" style="color:#22c55e"></i><span class="cell-label green">Spray Foam</span><span class="cell-sub">R-21 walls, R-38 attic</span></div>
+            <div class="cell-center"><i class="fa-solid fa-minus-circle" style="color:#eab308"></i><span class="cell-label yellow">Fiberglass Batt</span><span class="cell-sub">R-13 walls, R-30 attic</span></div>
+        </div>
+        <div class="table-row">
+            <div><div><div class="feature-name">Smart Home Technology</div><div class="feature-desc">Integrated automation</div></div></div>
+            <div class="cell-center"><i class="fa-solid fa-check-circle" style="color:#22c55e"></i><span class="cell-label green">Full Package</span><span class="cell-sub">Nest, Locks, Cameras</span></div>
+            <div class="cell-center"><i class="fa-solid fa-minus-circle" style="color:#eab308"></i><span class="cell-label yellow">Basic Thermostat</span></div>
+        </div>
+        <div class="table-row">
+            <div><div><div class="feature-name">Kitchen Appliances</div><div class="feature-desc">Brand & quality</div></div></div>
+            <div class="cell-center"><div class="big-value teal" style="font-size:20px">KitchenAid</div><span class="cell-label green">Pro-grade</span></div>
+            <div class="cell-center"><div class="big-value gray" style="font-size:20px">Whirlpool</div><span class="cell-label">Standard</span></div>
+        </div>
+        <div class="table-row">
+            <div><div><div class="feature-name">Flooring</div><div class="feature-desc">Materials & coverage</div></div></div>
+            <div class="cell-center"><span class="cell-label green">Luxury Vinyl Plank</span><span class="cell-sub">Entire home + tile baths</span></div>
+            <div class="cell-center"><span class="cell-label">Carpet + Vinyl</span><span class="cell-sub">Mixed materials</span></div>
+        </div>
+        <div class="table-row">
+            <div><div><div class="feature-name">Countertops</div><div class="feature-desc">Kitchen & bath</div></div></div>
+            <div class="cell-center"><span class="cell-label green">Quartz</span><span class="cell-sub">Kitchen & all baths</span></div>
+            <div class="cell-center"><span class="cell-label">Granite</span><span class="cell-sub">Kitchen only</span></div>
+        </div>
+    </div>
+</div>
+
+<!-- ── ROI & Energy Savings ────────────────────────── -->
+<div class="roi-section">
+    <div class="section-title">
+        <h2>Investment Value & Energy Savings</h2>
+        <p>See the long-term financial benefits of choosing quality construction</p>
+    </div>
+
+    <div class="roi-grid">
+        <div class="roi-card">
+            <h3>10-Year Value Projection</h3>
+            <div class="roi-stat good">
+                <div class="roi-label">InTownHomes ROI</div>
+                <div class="roi-value green">+18.2%</div>
+                <div class="roi-sub">{{ithAppreciation}} appreciation</div>
+            </div>
+            <div class="roi-stat bad">
+                <div class="roi-label">Competitor ROI</div>
+                <div class="roi-value red">+12.4%</div>
+                <div class="roi-sub">{{compAppreciation}} appreciation</div>
+            </div>
+        </div>
+        <div class="roi-card">
+            <h3>Energy Savings Over Time</h3>
+            <div class="savings-row">
+                <span class="savings-label">Annual Energy Savings</span>
+                <span class="savings-value">$2,400</span>
+            </div>
+            <div class="savings-row">
+                <span class="savings-label">10-Year Total Savings</span>
+                <span class="savings-value">$24,000</span>
+            </div>
+            <div class="savings-row">
+                <span class="savings-label">30-Year Total Savings</span>
+                <span class="savings-value">$72,000</span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ── Payment Comparison ──────────────────────────── -->
+<div class="payment-section">
+    <div class="section-title">
+        <h2>Monthly Payment Comparison</h2>
+        <p>Based on 20% down, 6.5% interest, 30-year fixed</p>
+    </div>
+
+    <div class="payment-grid">
+        <div class="payment-card premium">
+            <div class="payment-card-header">
+                <h3>InTownHomes — {{ithPlan}}</h3>
+                <span class="price-tag teal">{{ithPrice}}</span>
+            </div>
+            <div class="payment-result blue">
+                <div class="payment-label">Estimated Monthly Payment</div>
+                <div class="payment-amount">{{ithMonthly}}</div>
+                <div class="payment-breakdown">
+                    <div><div class="bd-label">Principal & Interest</div><div class="bd-value">{{ithPrincipal}}</div></div>
+                    <div><div class="bd-label">Property Tax</div><div class="bd-value">{{ithTax}}</div></div>
+                    <div><div class="bd-label">Insurance</div><div class="bd-value">{{ithInsurance}}</div></div>
+                </div>
+            </div>
+            <div class="payment-note good">
+                <i class="fa-solid fa-piggy-bank" style="color:#16a34a"></i>
+                With energy savings: Effective payment of <span class="highlight-green">{{ithEffective}}/mo</span>
+            </div>
+        </div>
+
+        <div class="payment-card competitor">
+            <div class="payment-card-header">
+                <h3>{{compBuilder}}</h3>
+                <span class="price-tag gray">{{compPrice}}</span>
+            </div>
+            <div class="payment-result dark">
+                <div class="payment-label">Estimated Monthly Payment</div>
+                <div class="payment-amount">{{compMonthly}}</div>
+                <div class="payment-breakdown">
+                    <div><div class="bd-label">Principal & Interest</div><div class="bd-value">{{compPrincipal}}</div></div>
+                    <div><div class="bd-label">Property Tax</div><div class="bd-value">{{compTax}}</div></div>
+                    <div><div class="bd-label">Insurance</div><div class="bd-value">{{compInsurance}}</div></div>
+                </div>
+            </div>
+            <div class="payment-note bad">
+                <i class="fa-solid fa-exclamation-triangle" style="color:#dc2626"></i>
+                Higher energy costs: Effective payment of <span class="highlight-red">{{compEffective}}/mo</span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ── Bottom Banner ───────────────────────────────── -->
+<div class="bottom-banner">
+    <div class="banner-title">The Real Comparison</div>
+    <div class="banner-grid">
+        <div class="banner-stat">
+            <div class="banner-label">Monthly Payment Difference</div>
+            <div class="banner-value">{{monthlyDifference}}</div>
+            <div class="banner-sub">{{priceDirLabel}}</div>
+        </div>
+        <div class="banner-stat">
+            <div class="banner-label">But with Energy Savings...</div>
+            <div class="banner-value orange">{{effectiveDifference}}</div>
+            <div class="banner-sub">Effective difference</div>
+        </div>
+        <div class="banner-stat">
+            <div class="banner-label">Extra Value You Get</div>
+            <div class="banner-value green">$50K+</div>
+            <div class="banner-sub">In premium features</div>
+        </div>
+    </div>
+</div>
+
+<!-- ── Feature Explainers ──────────────────────────── -->
+<div class="explainers-section">
+    <div class="section-title">
+        <h2>Premium Features Explained</h2>
+    </div>
+    <div class="explainers-grid">
+        <div class="explainer-card">
+            <div class="explainer-img"><i class="fa-solid fa-shield-halved"></i></div>
+            <div class="explainer-body">
+                <h3>Rainscreen Siding System</h3>
+                <p>An advanced exterior wall system that creates an air gap between your home's structure and siding, allowing moisture to escape while protecting against water intrusion.</p>
+                <div class="explainer-point"><i class="fa-solid fa-check-circle"></i><div><div class="point-title">Prevents Mold & Rot</div><div class="point-desc">Moisture escapes before damage occurs</div></div></div>
+                <div class="explainer-point"><i class="fa-solid fa-check-circle"></i><div><div class="point-title">Houston Climate Perfect</div><div class="point-desc">Handles humidity & heavy rain</div></div></div>
+            </div>
+        </div>
+        <div class="explainer-card">
+            <div class="explainer-img" style="background:linear-gradient(135deg, var(--orange), #c44)"><i class="fa-solid fa-fire"></i></div>
+            <div class="explainer-body">
+                <h3>Navien Tankless Water Heater</h3>
+                <p>Heats water on-demand as it flows through the unit. Never run out of hot water, save $450/year on energy, and it lasts 20+ years.</p>
+                <div class="explainer-point"><i class="fa-solid fa-check-circle"></i><div><div class="point-title">Endless Hot Water</div><div class="point-desc">Multiple showers, no waiting</div></div></div>
+                <div class="explainer-point"><i class="fa-solid fa-check-circle"></i><div><div class="point-title">40% More Efficient</div><div class="point-desc">Save $450/year on energy bills</div></div></div>
+            </div>
+        </div>
+        <div class="explainer-card">
+            <div class="explainer-img" style="background:linear-gradient(135deg, #1a5c3b, var(--teal))"><i class="fa-solid fa-building"></i></div>
+            <div class="explainer-body">
+                <h3>2x6 vs 2x4 Wall Construction</h3>
+                <p>33% more insulation space and superior structural strength compared to standard 2x4 construction used by most builders.</p>
+                <div class="explainer-point"><i class="fa-solid fa-check-circle"></i><div><div class="point-title">Better Insulation</div><div class="point-desc">R-21 vs R-13 in standard homes</div></div></div>
+                <div class="explainer-point"><i class="fa-solid fa-check-circle"></i><div><div class="point-title">Hurricane Resistant</div><div class="point-desc">Better storm resistance</div></div></div>
+            </div>
+        </div>
+        <div class="explainer-card">
+            <div class="explainer-img" style="background:linear-gradient(135deg, #16a34a, #059669)"><i class="fa-solid fa-spray-can"></i></div>
+            <div class="explainer-body">
+                <h3>Spray Foam Insulation</h3>
+                <p>Expands to fill every crack and crevice, creating an airtight seal that dramatically reduces energy costs. Won't settle or degrade over time.</p>
+                <div class="explainer-point"><i class="fa-solid fa-check-circle"></i><div><div class="point-title">Airtight Seal</div><div class="point-desc">Eliminates drafts & air leaks</div></div></div>
+                <div class="explainer-point"><i class="fa-solid fa-check-circle"></i><div><div class="point-title">Higher R-Value</div><div class="point-desc">R-21 walls, R-38 attic</div></div></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ── CTA Footer ──────────────────────────────────── -->
+<div class="cta-footer">
+    <h2>Ready to See the Difference in Person?</h2>
+    <p>Schedule a private tour of {{ithAddress}} and experience the InTownHomes quality difference firsthand.</p>
+    <div class="cta-buttons">
+        <span class="cta-btn orange"><i class="fa-solid fa-calendar-check"></i> Schedule a Tour</span>
+        <span class="cta-btn white"><i class="fa-solid fa-phone"></i> Call {{agentPhone}}</span>
+    </div>
+</div>
+
+<!-- ── Agent Footer ────────────────────────────────── -->
+<div class="agent-info">
+    <div class="agent-avatar">{{agentInitials}}</div>
+    <div>
+        <div class="agent-name">{{agentName}}</div>
+        <div>{{agentPhone}} | {{agentEmail}}</div>
+        <div>InTownHomes — Houston, TX</div>
+    </div>
+</div>
+
+</body>
+</html>

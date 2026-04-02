@@ -1,0 +1,62 @@
+{
+  "$schema": "https://aka.ms/json-schemas/copilot/plugin/v2.2/schema.json",
+  "schema_version": "v2.2",
+  "name_for_human": "InTownHomes Flyer Generator",
+  "description_for_human": "Generates comparison flyer PDFs and emails them to buyers",
+  "namespace": "ithFlyer",
+  "functions": [
+    {
+      "name": "generateFlyer",
+      "description": "Generate a branded InTownHomes vs competitor comparison flyer PDF and email it to the buyer. Call this after collecting all listing details from the salesperson.",
+      "capabilities": {
+        "response_semantics": {
+          "data_path": "$",
+          "properties": {
+            "title": "$.message",
+            "subtitle": "$.filename"
+          },
+          "static_template": {
+            "$schema": "http://adaptivecards.io/schemas/adaptive-card.json",
+            "type": "AdaptiveCard",
+            "version": "1.5",
+            "body": [
+              {
+                "type": "TextBlock",
+                "text": "Flyer Generated!",
+                "weight": "Bolder",
+                "size": "Large",
+                "color": "Good"
+              },
+              {
+                "type": "TextBlock",
+                "text": "${message}",
+                "wrap": true
+              },
+              {
+                "type": "FactSet",
+                "facts": [
+                  { "title": "Buyer", "value": "${buyerName}" },
+                  { "title": "Sent to", "value": "${buyerEmail}" },
+                  { "title": "InTownHomes", "value": "${ithSummary}" },
+                  { "title": "Competitor", "value": "${compSummary}" }
+                ]
+              }
+            ]
+          }
+        }
+      }
+    }
+  ],
+  "runtimes": [
+    {
+      "type": "OpenApi",
+      "auth": {
+        "type": "None"
+      },
+      "spec": {
+        "url": "openapi.yaml"
+      },
+      "run_for_functions": ["generateFlyer"]
+    }
+  ]
+}

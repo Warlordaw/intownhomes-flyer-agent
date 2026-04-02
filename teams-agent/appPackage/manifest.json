@@ -1,0 +1,38 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/teams/vDevPreview/MicrosoftTeams.schema.json",
+  "manifestVersion": "devPreview",
+  "version": "1.0.0",
+  "id": "3b544ea0-9eae-49f0-9bc8-0d7057d372b4",
+  "developer": {
+    "name": "Lovett Commercial",
+    "websiteUrl": "https://intownhomes.com",
+    "privacyUrl": "https://intownhomes.com/privacy",
+    "termsOfUseUrl": "https://intownhomes.com/terms"
+  },
+  "icons": {
+    "color": "color.png",
+    "outline": "outline.png"
+  },
+  "name": {
+    "short": "ITH Flyer Generator",
+    "full": "InTownHomes Comparison Flyer Generator"
+  },
+  "description": {
+    "short": "Create branded comparison flyers and email them to buyers",
+    "full": "A Copilot agent for InTownHomes sales reps. Enter your listing details and a competitor listing, and the agent generates a professional branded PDF comparison flyer and emails it directly to the buyer. Highlights InTownHomes premium features like rainscreen siding, 2x6 walls, Navien tankless water heaters, and spray foam insulation."
+  },
+  "accentColor": "#003B5C",
+  "copilotAgents": {
+    "declarativeAgents": [
+      {
+        "id": "ithFlyerAgent",
+        "file": "declarativeAgent.json"
+      }
+    ]
+  },
+  "permissions": [
+    "identity",
+    "messageTeamMembers"
+  ],
+  "validDomains": []
+}

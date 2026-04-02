@@ -34,5 +34,5 @@
     "identity",
     "messageTeamMembers"
   ],
-  "validDomains": []
+  "validDomains": ["intownhomes-flyer-agent.onrender.com"]
 }

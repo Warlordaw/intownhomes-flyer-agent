@@ -5,8 +5,8 @@ info:
   version: 1.0.0
 
 servers:
-  - url: ${{API_BASE_URL}}
-    description: PDF generation server
+  - url: https://intownhomes-flyer-agent.onrender.com
+    description: PDF generation server (Render free tier)
 
 paths:
   /generate:
